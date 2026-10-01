@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>图片分辨率调整 · 仅像素输入</title>
+    <title>图片画质调整 · 分辨率(质量)</title>
     <style>
         * {
             box-sizing: border-box;
@@ -142,7 +142,7 @@
             font-weight: 600;
             color: #1e2e45;
             font-size: 0.95rem;
-            margin-bottom: 14px;
+            margin-bottom: 16px;
             display: flex;
             align-items: center;
             gap: 8px;
@@ -155,76 +155,116 @@
             padding: 2px 10px;
             border-radius: 20px;
         }
-        /* 分辨率输入行 */
-        .resolution-row {
+        /* 画质滑块 */
+        .quality-header {
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            gap: 12px;
-            flex-wrap: wrap;
+            margin-bottom: 8px;
         }
-        .resolution-row .input-wrapper {
-            flex: 1;
-            display: flex;
-            align-items: center;
+        .quality-header .label {
+            font-weight: 500;
+            color: #1e2e45;
+            font-size: 0.9rem;
+        }
+        .quality-header .value-badge {
             background: #ffffff;
+            padding: 4px 14px;
+            border-radius: 30px;
             border: 1px solid #cfddee;
-            border-radius: 14px;
-            padding: 6px 8px 6px 14px;
-            min-width: 110px;
+            font-weight: 600;
+            color: #1e3a6b;
+            font-size: 0.95rem;
+            min-width: 62px;
+            text-align: center;
         }
-        .resolution-row .input-wrapper span {
-            color: #6c7d9c;
-            font-size: 0.85rem;
-            margin-right: 6px;
-            font-weight: 500;
+        .quality-header .value-badge.low {
+            color: #c0392b;
+            border-color: #e6b0aa;
+            background: #fdedec;
         }
-        .resolution-row input[type="number"] {
+        .quality-header .value-badge.medium {
+            color: #b9770e;
+            border-color: #f5cba7;
+            background: #fef5e7;
+        }
+        .quality-header .value-badge.high {
+            color: #1e8449;
+            border-color: #a9dfbf;
+            background: #eafaf1;
+        }
+        input[type="range"] {
             width: 100%;
-            border: none;
-            padding: 8px 0;
-            font-size: 1.05rem;
-            font-weight: 600;
-            color: #0b1b2b;
+            margin: 4px 0 6px;
+            -webkit-appearance: none;
             background: transparent;
+        }
+        input[type="range"]:focus {
             outline: none;
-            text-align: left;
         }
-        .resolution-row input[type="number"]:focus {
-            color: #1e4a7a;
+        input[type="range"]::-webkit-slider-runnable-track {
+            height: 8px;
+            border-radius: 10px;
+            background: linear-gradient(to right, #e74c3c, #f39c12, #27ae60);
         }
-        .resolution-row input[type="number"]::-webkit-inner-spin-button {
-            opacity: 0.5;
-        }
-        .resolution-row .x-mark {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: #8899b0;
-            flex-shrink: 0;
-        }
-        .resolution-row .lock-icon {
-            background: #eef3fc;
-            border-radius: 12px;
-            padding: 8px 14px;
-            font-size: 0.8rem;
-            font-weight: 500;
-            color: #2d5f9a;
-            white-space: nowrap;
-            cursor: pointer;
-            user-select: none;
-            transition: 0.1s;
-            border: 1px solid transparent;
-            flex-shrink: 0;
-        }
-        .resolution-row .lock-icon.active {
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 24px;
+            height: 24px;
             background: #2d5f9a;
-            color: white;
-            border-color: #2d5f9a;
+            border-radius: 50%;
+            margin-top: -8px;
+            box-shadow: 0 2px 8px rgba(45, 95, 154, 0.5);
+            cursor: pointer;
+            transition: 0.1s;
+            border: 3px solid white;
         }
-        .resolution-row .lock-icon:hover {
-            background: #d9e6ff;
-        }
-        .resolution-row .lock-icon.active:hover {
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.15);
             background: #1e4a7a;
+        }
+        .quality-scale {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            color: #8899b0;
+            padding: 0 4px;
+        }
+        .quality-desc {
+            margin-top: 12px;
+            font-size: 0.82rem;
+            color: #5e6f8d;
+            background: #eef3fc;
+            padding: 10px 14px;
+            border-radius: 12px;
+            line-height: 1.5;
+        }
+        .quality-desc strong {
+            color: #2d5f9a;
+        }
+        .file-size-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 12px;
+            padding: 10px 14px;
+            background: #ffffff;
+            border-radius: 12px;
+            border: 1px solid #e3e9f2;
+            font-size: 0.85rem;
+        }
+        .file-size-row .fs-label {
+            color: #5e6f8d;
+        }
+        .file-size-row .fs-value {
+            font-weight: 600;
+            color: #1e3a6b;
+        }
+        .file-size-row .fs-value.smaller {
+            color: #27ae60;
+        }
+        .file-size-row .fs-value.larger {
+            color: #e67e22;
         }
         .reset-btn {
             background: #ffffff;
@@ -248,7 +288,6 @@
         .reset-btn:active {
             transform: scale(0.98);
         }
-        /* 预览容器：固定高度，图片视觉大小不变 */
         .preview-container {
             background: #f0f4fa;
             border-radius: 24px;
@@ -292,6 +331,8 @@
             padding: 10px 16px;
             border-radius: 16px;
             border: 1px solid #e3e9f2;
+            flex-wrap: wrap;
+            gap: 8px;
         }
         .info-bar .badge {
             background: #e3e9f2;
@@ -299,7 +340,7 @@
             border-radius: 30px;
             font-weight: 500;
             color: #1e3a6b;
-            font-size: 0.85rem;
+            font-size: 0.82rem;
         }
         .hidden {
             display: none;
@@ -355,15 +396,20 @@
             color: #8899b0;
             text-align: center;
         }
+        .format-note {
+            font-size: 0.78rem;
+            color: #8899b0;
+            margin-top: 6px;
+        }
     </style>
 </head>
 <body>
 <div class="card">
     <h1>
-        🖼️ 分辨率调整
-        <span>像素输入</span>
+        🖼️ 图片画质调整
+        <span>分辨率 = 质量</span>
     </h1>
-    <div class="subhead">上传图片，直接输入宽 × 高像素值调整分辨率，预览视觉大小保持不变</div>
+    <div class="subhead">保持图片像素尺寸不变，只调整输出画质（压缩质量），图片视觉大小完全不变</div>
 
     <div class="grid">
         <!-- 左侧控制区 -->
@@ -381,23 +427,34 @@
                 </label>
             </div>
 
-            <!-- 分辨率输入区 -->
+            <!-- 画质调节 -->
             <div class="control-group">
                 <div class="group-title">
-                    📐 调整分辨率
-                    <span class="hint">输入像素值</span>
+                    🎚️ 调整画质
+                    <span class="hint">压缩质量</span>
                 </div>
-                <div class="resolution-row">
-                    <div class="input-wrapper">
-                        <span>W</span>
-                        <input type="number" id="widthInput" min="1" max="10000" value="800" step="1" placeholder="宽度">
-                    </div>
-                    <span class="x-mark">×</span>
-                    <div class="input-wrapper">
-                        <span>H</span>
-                        <input type="number" id="heightInput" min="1" max="10000" value="600" step="1" placeholder="高度">
-                    </div>
-                    <div class="lock-icon active" id="lockAspectBtn" title="锁定宽高比">🔒 锁定</div>
+
+                <div class="quality-header">
+                    <span class="label">输出质量</span>
+                    <span class="value-badge high" id="qualityValue">92%</span>
+                </div>
+                <input type="range" id="qualitySlider" min="1" max="100" value="92" step="1">
+                <div class="quality-scale">
+                    <span>1% (最差)</span>
+                    <span>50%</span>
+                    <span>100% (最好)</span>
+                </div>
+
+                <div class="quality-desc" id="qualityDesc">
+                    <strong>高质量</strong> · 画面清晰细腻，文件较大
+                </div>
+
+                <div class="file-size-row">
+                    <span class="fs-label">预估文件大小</span>
+                    <span class="fs-value" id="fileSizeValue">—</span>
+                </div>
+                <div class="format-note" id="formatNote">
+                    ⚠️ 输出格式：JPEG（PNG 不支持有损压缩，将转为 JPEG）
                 </div>
             </div>
 
@@ -406,7 +463,7 @@
                     <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
                     <path d="M3 3v5h5" />
                 </svg>
-                重置为原始尺寸
+                重置为最高画质
             </button>
         </div>
 
@@ -425,8 +482,9 @@
             </div>
 
             <div class="info-bar">
-                <span>当前分辨率</span>
+                <span>图片信息</span>
                 <span class="badge" id="currentSizeBadge">— × —</span>
+                <span class="badge" id="currentQualityBadge">质量 —</span>
             </div>
 
             <div class="action-buttons">
@@ -448,7 +506,7 @@
                 </button>
             </div>
             <div class="footer-note">
-                ⚡ 宽度和高度的范围限制在 1～10000 像素之间 · 预览尺寸固定不变
+                ⚡ 像素尺寸保持不变 · 只改变压缩质量 · 图片视觉大小完全不变
             </div>
         </div>
     </div>
@@ -460,26 +518,26 @@
         const uploadArea = document.getElementById('uploadArea');
         const previewCanvas = document.getElementById('previewCanvas');
         const emptyPreview = document.getElementById('emptyPreview');
-        const widthInput = document.getElementById('widthInput');
-        const heightInput = document.getElementById('heightInput');
-        const lockAspectBtn = document.getElementById('lockAspectBtn');
+        const qualitySlider = document.getElementById('qualitySlider');
+        const qualityValue = document.getElementById('qualityValue');
+        const qualityDesc = document.getElementById('qualityDesc');
+        const fileSizeValue = document.getElementById('fileSizeValue');
+        const formatNote = document.getElementById('formatNote');
         const resetBtn = document.getElementById('resetBtn');
         const downloadBtn = document.getElementById('downloadBtn');
         const saveBtn = document.getElementById('saveBtn');
         const currentSizeBadge = document.getElementById('currentSizeBadge');
+        const currentQualityBadge = document.getElementById('currentQualityBadge');
         const previewContainer = document.getElementById('previewContainer');
 
         let originalImage = null;
         let originalWidth = 0;
         let originalHeight = 0;
-        let aspectRatio = 1;
-        let lockAspect = true;
-        let isUpdating = false;
 
         setControlsEnabled(false);
 
         function setControlsEnabled(enabled) {
-            const controls = [widthInput, heightInput, lockAspectBtn, resetBtn, downloadBtn, saveBtn];
+            const controls = [qualitySlider, resetBtn, downloadBtn, saveBtn];
             controls.forEach(el => {
                 if (enabled) {
                     el.removeAttribute('disabled');
@@ -493,51 +551,54 @@
             }
         }
 
-        // 锁定宽高比时，根据变化的字段同步另一个
-        function applyAspectLock(changedField) {
-            if (!originalImage || !lockAspect || isUpdating) return;
-            isUpdating = true;
-            try {
-                let w = parseFloat(widthInput.value) || 1;
-                let h = parseFloat(heightInput.value) || 1;
-
-                if (changedField === 'width') {
-                    h = Math.round(w / aspectRatio);
-                    h = Math.min(10000, Math.max(1, h));
-                    heightInput.value = h;
-                } else if (changedField === 'height') {
-                    w = Math.round(h * aspectRatio);
-                    w = Math.min(10000, Math.max(1, w));
-                    widthInput.value = w;
-                }
-            } finally {
-                isUpdating = false;
-            }
+        // 获取画质描述
+        function getQualityDesc(q) {
+            if (q <= 20) return { text: '<strong>极低质量</strong> · 严重压缩，明显马赛克，文件极小', cls: 'low' };
+            if (q <= 40) return { text: '<strong>低质量</strong> · 压缩明显，细节损失较多，文件小', cls: 'low' };
+            if (q <= 60) return { text: '<strong>中等质量</strong> · 平衡画质与大小，日常够用', cls: 'medium' };
+            if (q <= 80) return { text: '<strong>良好质量</strong> · 画面清晰，细节保留不错', cls: 'high' };
+            if (q <= 95) return { text: '<strong>高质量</strong> · 画面清晰细腻，文件较大', cls: 'high' };
+            return { text: '<strong>极高质量</strong> · 几乎无损，文件最大', cls: 'high' };
         }
 
-        // 渲染预览：实际像素 = 目标分辨率，显示尺寸固定（基于原始比例）
+        // 格式化文件大小
+        function formatSize(bytes) {
+            if (bytes < 1024) return bytes + ' B';
+            if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+            return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
+        }
+
+        // 核心：只改变画质，不改变像素尺寸
         function renderPreview() {
             if (!originalImage) return;
 
-            let targetW = parseInt(widthInput.value, 10);
-            let targetH = parseInt(heightInput.value, 10);
+            const quality = parseInt(qualitySlider.value, 10) / 100;
 
-            if (isNaN(targetW) || targetW < 1) targetW = 1;
-            if (isNaN(targetH) || targetH < 1) targetH = 1;
-            targetW = Math.min(10000, targetW);
-            targetH = Math.min(10000, targetH);
-
-            if (parseInt(widthInput.value, 10) !== targetW) widthInput.value = targetW;
-            if (parseInt(heightInput.value, 10) !== targetH) heightInput.value = targetH;
-
-            // 实际画布尺寸 = 目标分辨率
-            previewCanvas.width = targetW;
-            previewCanvas.height = targetH;
+            // 画布尺寸 = 原始像素尺寸（保持不变）
+            previewCanvas.width = originalWidth;
+            previewCanvas.height = originalHeight;
             const ctx = previewCanvas.getContext('2d');
-            ctx.clearRect(0, 0, targetW, targetH);
-            ctx.drawImage(originalImage, 0, 0, targetW, targetH);
+            ctx.clearRect(0, 0, originalWidth, originalHeight);
+            ctx.drawImage(originalImage, 0, 0);
 
-            // 显示尺寸固定：基于原始图片比例填充容器，不随分辨率变化
+            // 模拟低画质效果（用于预览视觉反馈）
+            // 通过将图片以低质量导出再重新绘制，让用户看到画质变化
+            if (quality < 1) {
+                const tempCanvas = document.createElement('canvas');
+                tempCanvas.width = originalWidth;
+                tempCanvas.height = originalHeight;
+                const tempCtx = tempCanvas.getContext('2d');
+                tempCtx.drawImage(originalImage, 0, 0);
+                const dataUrl = tempCanvas.toDataURL('image/jpeg', quality);
+                const tempImg = new Image();
+                tempImg.onload = () => {
+                    ctx.clearRect(0, 0, originalWidth, originalHeight);
+                    ctx.drawImage(tempImg, 0, 0);
+                };
+                tempImg.src = dataUrl;
+            }
+
+            // 显示尺寸固定（基于容器，视觉大小不变）
             const containerWidth = previewContainer.clientWidth - 28;
             const containerHeight = previewContainer.clientHeight - 28;
             const displayAspect = originalWidth / originalHeight;
@@ -554,13 +615,31 @@
             previewCanvas.style.width = displayW + 'px';
             previewCanvas.style.height = displayH + 'px';
 
-            currentSizeBadge.textContent = `${targetW} × ${targetH}`;
+            // 更新UI
+            const qInt = parseInt(qualitySlider.value, 10);
+            const desc = getQualityDesc(qInt);
+            qualityDesc.innerHTML = desc.text;
+            qualityValue.textContent = qInt + '%';
+            qualityValue.className = 'value-badge ' + desc.cls;
+
+            currentSizeBadge.textContent = `${originalWidth} × ${originalHeight}`;
+            currentQualityBadge.textContent = `质量 ${qInt}%`;
+
+            // 预估文件大小（基于JPEG导出）
+            try {
+                const dataUrl = previewCanvas.toDataURL('image/jpeg', quality);
+                const base64 = dataUrl.split(',')[1];
+                const size = Math.round(base64.length * 3 / 4);
+                fileSizeValue.textContent = formatSize(size);
+                fileSizeValue.className = 'fs-value ' + (quality < 0.7 ? 'smaller' : (quality > 0.95 ? 'larger' : ''));
+            } catch (e) {
+                fileSizeValue.textContent = '—';
+            }
         }
 
-        function resetToOriginal() {
+        function resetQuality() {
             if (!originalImage) return;
-            widthInput.value = originalWidth;
-            heightInput.value = originalHeight;
+            qualitySlider.value = 92;
             renderPreview();
         }
 
@@ -577,19 +656,23 @@
                     originalImage = img;
                     originalWidth = img.naturalWidth;
                     originalHeight = img.naturalHeight;
-                    aspectRatio = originalWidth / originalHeight;
 
                     previewCanvas.classList.remove('hidden');
                     emptyPreview.classList.add('hidden');
 
                     setControlsEnabled(true);
 
-                    widthInput.value = originalWidth;
-                    heightInput.value = originalHeight;
+                    // 默认最高质量
+                    qualitySlider.value = 92;
 
-                    lockAspect = true;
-                    lockAspectBtn.classList.add('active');
-                    lockAspectBtn.textContent = '🔒 锁定';
+                    // 更新格式提示
+                    if (file.type === 'image/png') {
+                        formatNote.textContent = '⚠️ 原图为 PNG（无损格式），输出将转为 JPEG（有损压缩）以体现画质变化';
+                    } else if (file.type === 'image/webp') {
+                        formatNote.textContent = 'ℹ️ 原图为 WEBP，输出将转为 JPEG 以便通用下载';
+                    } else {
+                        formatNote.textContent = 'ℹ️ 输出格式：JPEG（有损压缩）';
+                    }
 
                     renderPreview();
                 };
@@ -614,85 +697,31 @@
             imageInput.click();
         });
 
-        // 宽度输入
-        widthInput.addEventListener('input', () => {
-            if (!originalImage || isUpdating) return;
-            if (lockAspect) {
-                applyAspectLock('width');
-            }
-            renderPreview();
-        });
-
-        // 高度输入
-        heightInput.addEventListener('input', () => {
-            if (!originalImage || isUpdating) return;
-            if (lockAspect) {
-                applyAspectLock('height');
-            }
-            renderPreview();
-        });
-
-        // 失焦时修正数值范围
-        widthInput.addEventListener('blur', () => {
+        qualitySlider.addEventListener('input', () => {
             if (!originalImage) return;
-            let w = parseInt(widthInput.value, 10);
-            if (isNaN(w) || w < 1) w = 1;
-            if (w > 10000) w = 10000;
-            widthInput.value = w;
-            if (lockAspect) {
-                applyAspectLock('width');
-            }
             renderPreview();
         });
 
-        heightInput.addEventListener('blur', () => {
-            if (!originalImage) return;
-            let h = parseInt(heightInput.value, 10);
-            if (isNaN(h) || h < 1) h = 1;
-            if (h > 10000) h = 10000;
-            heightInput.value = h;
-            if (lockAspect) {
-                applyAspectLock('height');
-            }
-            renderPreview();
-        });
-
-        // 锁定宽高比切换
-        lockAspectBtn.addEventListener('click', () => {
-            if (!originalImage) return;
-            lockAspect = !lockAspect;
-            if (lockAspect) {
-                lockAspectBtn.classList.add('active');
-                lockAspectBtn.textContent = '🔒 锁定';
-                applyAspectLock('width');
-            } else {
-                lockAspectBtn.classList.remove('active');
-                lockAspectBtn.textContent = '🔓 解锁';
-            }
-            renderPreview();
-        });
-
-        // 重置
         resetBtn.addEventListener('click', () => {
             if (!originalImage) return;
-            resetToOriginal();
+            resetQuality();
         });
 
-        // 下载
         downloadBtn.addEventListener('click', () => {
             if (!originalImage || previewCanvas.classList.contains('hidden')) return;
+            const quality = parseInt(qualitySlider.value, 10) / 100;
             const link = document.createElement('a');
-            link.download = `resized_${widthInput.value}x${heightInput.value}.png`;
-            link.href = previewCanvas.toDataURL('image/png');
+            link.download = `quality_${qualitySlider.value}.jpg`;
+            link.href = previewCanvas.toDataURL('image/jpeg', quality);
             link.click();
         });
 
-        // 保存
         saveBtn.addEventListener('click', () => {
             if (!originalImage || previewCanvas.classList.contains('hidden')) return;
+            const quality = parseInt(qualitySlider.value, 10) / 100;
             const link = document.createElement('a');
-            link.download = `saved_${widthInput.value}x${heightInput.value}.png`;
-            link.href = previewCanvas.toDataURL('image/png');
+            link.download = `saved_quality_${qualitySlider.value}.jpg`;
+            link.href = previewCanvas.toDataURL('image/jpeg', quality);
             link.click();
         });
 
