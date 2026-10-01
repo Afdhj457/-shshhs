@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>图片分辨率 · 独立调整 + 保存</title>
+    <title>图片分辨率调整 · 仅像素输入</title>
     <style>
         * {
             box-sizing: border-box;
@@ -28,7 +28,7 @@
             background: #ffffff;
             border-radius: 28px;
             box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.25);
-            max-width: 1200px;
+            max-width: 1100px;
             width: 100%;
             max-height: 96vh;
             padding: 24px 28px;
@@ -134,95 +134,77 @@
         .control-group {
             background: #f8fafd;
             border-radius: 18px;
-            padding: 16px 18px;
+            padding: 18px;
             margin-bottom: 18px;
             border: 1px solid #e3e9f2;
         }
-        .control-group label {
-            display: flex;
-            justify-content: space-between;
-            font-weight: 500;
+        .control-group .group-title {
+            font-weight: 600;
             color: #1e2e45;
-            margin-bottom: 6px;
-            font-size: 0.9rem;
-        }
-        .control-group label span.value-badge {
-            background: #ffffff;
-            padding: 2px 10px;
-            border-radius: 30px;
-            border: 1px solid #cfddee;
-            font-weight: 500;
-            color: #1e3a6b;
-            font-size: 0.85rem;
-        }
-        input[type="range"] {
-            width: 100%;
-            margin: 6px 0 10px;
-            -webkit-appearance: none;
-            background: transparent;
-        }
-        input[type="range"]:focus {
-            outline: none;
-        }
-        input[type="range"]::-webkit-slider-runnable-track {
-            height: 6px;
-            background: #d0ddeb;
-            border-radius: 10px;
-        }
-        input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 20px;
-            height: 20px;
-            background: #2d5f9a;
-            border-radius: 50%;
-            margin-top: -7px;
-            box-shadow: 0 2px 6px rgba(45, 95, 154, 0.4);
-            cursor: pointer;
-            transition: 0.1s;
-            border: 2px solid white;
-        }
-        input[type="range"]::-webkit-slider-thumb:hover {
-            transform: scale(1.15);
-            background: #1e4a7a;
-        }
-        .dimension-inputs {
+            font-size: 0.95rem;
+            margin-bottom: 14px;
             display: flex;
             align-items: center;
-            gap: 10px;
-            margin-top: 6px;
+            gap: 8px;
+        }
+        .control-group .group-title .hint {
+            font-weight: 400;
+            font-size: 0.78rem;
+            color: #6c7d9c;
+            background: #eef3fc;
+            padding: 2px 10px;
+            border-radius: 20px;
+        }
+        /* 分辨率输入行 */
+        .resolution-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
             flex-wrap: wrap;
         }
-        .dimension-inputs .input-wrapper {
+        .resolution-row .input-wrapper {
             flex: 1;
             display: flex;
             align-items: center;
             background: #ffffff;
             border: 1px solid #cfddee;
-            border-radius: 12px;
-            padding: 4px 8px 4px 12px;
+            border-radius: 14px;
+            padding: 6px 8px 6px 14px;
+            min-width: 110px;
         }
-        .dimension-inputs .input-wrapper span {
+        .resolution-row .input-wrapper span {
             color: #6c7d9c;
             font-size: 0.85rem;
-            margin-right: 4px;
+            margin-right: 6px;
+            font-weight: 500;
         }
-        .dimension-inputs input[type="number"] {
+        .resolution-row input[type="number"] {
             width: 100%;
             border: none;
             padding: 8px 0;
-            font-size: 0.95rem;
-            font-weight: 500;
+            font-size: 1.05rem;
+            font-weight: 600;
             color: #0b1b2b;
             background: transparent;
             outline: none;
+            text-align: left;
         }
-        .dimension-inputs input[type="number"]:focus {
+        .resolution-row input[type="number"]:focus {
             color: #1e4a7a;
         }
-        .dimension-inputs .lock-icon {
+        .resolution-row input[type="number"]::-webkit-inner-spin-button {
+            opacity: 0.5;
+        }
+        .resolution-row .x-mark {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #8899b0;
+            flex-shrink: 0;
+        }
+        .resolution-row .lock-icon {
             background: #eef3fc;
-            border-radius: 10px;
-            padding: 6px 12px;
+            border-radius: 12px;
+            padding: 8px 14px;
             font-size: 0.8rem;
             font-weight: 500;
             color: #2d5f9a;
@@ -231,74 +213,18 @@
             user-select: none;
             transition: 0.1s;
             border: 1px solid transparent;
+            flex-shrink: 0;
         }
-        .dimension-inputs .lock-icon.active {
+        .resolution-row .lock-icon.active {
             background: #2d5f9a;
             color: white;
             border-color: #2d5f9a;
         }
-        .dimension-inputs .lock-icon:hover {
+        .resolution-row .lock-icon:hover {
             background: #d9e6ff;
         }
-        .toggle-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 12px;
-            padding: 0 4px;
-        }
-        .toggle-label {
-            font-weight: 500;
-            color: #1e2e45;
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .toggle-switch {
-            position: relative;
-            display: inline-block;
-            width: 52px;
-            height: 28px;
-            flex-shrink: 0;
-        }
-        .toggle-switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-        .toggle-slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #cfddee;
-            transition: .25s;
-            border-radius: 34px;
-        }
-        .toggle-slider:before {
-            position: absolute;
-            content: "";
-            height: 22px;
-            width: 22px;
-            left: 3px;
-            bottom: 3px;
-            background-color: white;
-            transition: .25s;
-            border-radius: 50%;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.15);
-        }
-        .toggle-switch input:checked + .toggle-slider {
-            background-color: #2d5f9a;
-        }
-        .toggle-switch input:checked + .toggle-slider:before {
-            transform: translateX(24px);
-        }
-        .toggle-switch input:disabled + .toggle-slider {
-            opacity: 0.5;
-            cursor: not-allowed;
+        .resolution-row .lock-icon.active:hover {
+            background: #1e4a7a;
         }
         .reset-btn {
             background: #ffffff;
@@ -322,6 +248,7 @@
         .reset-btn:active {
             transform: scale(0.98);
         }
+        /* 预览容器：固定高度，图片视觉大小不变 */
         .preview-container {
             background: #f0f4fa;
             border-radius: 24px;
@@ -329,21 +256,13 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            min-height: 240px;
             border: 1px solid #dfe8f3;
             position: relative;
-            /* 关键：固定预览区域高度，避免因图片尺寸变化引起布局跳动 */
             height: 340px;
             overflow: hidden;
         }
-        /* 关键：Canvas 显示尺寸固定，不随分辨率变化 */
         #previewCanvas {
             display: block;
-            /* 让 canvas 在容器内居中，且保持视觉尺寸固定 */
-            width: auto;
-            height: auto;
-            max-width: 100%;
-            max-height: 100%;
             object-fit: contain;
             border-radius: 12px;
             box-shadow: 0 8px 24px -8px rgba(0, 0, 0, 0.2);
@@ -436,24 +355,15 @@
             color: #8899b0;
             text-align: center;
         }
-        .mode-hint {
-            font-size: 0.78rem;
-            color: #2d5f9a;
-            background: #eef3fc;
-            padding: 3px 10px;
-            border-radius: 20px;
-            font-weight: 500;
-            margin-left: 6px;
-        }
     </style>
 </head>
 <body>
 <div class="card">
     <h1>
-        🖼️ 分辨率调节
-        <span>实时预览</span>
+        🖼️ 分辨率调整
+        <span>像素输入</span>
     </h1>
-    <div class="subhead">上传图片，自由调整宽高像素，支持独立调整宽高 · 预览尺寸固定不变</div>
+    <div class="subhead">上传图片，直接输入宽 × 高像素值调整分辨率，预览视觉大小保持不变</div>
 
     <div class="grid">
         <!-- 左侧控制区 -->
@@ -471,45 +381,21 @@
                 </label>
             </div>
 
-            <div class="control-group" style="padding-bottom: 12px;">
-                <div class="toggle-row">
-                    <span class="toggle-label">
-                        🔓 独立调整宽高
-                        <span class="mode-hint" id="modeHint">当前：等比缩放</span>
-                    </span>
-                    <label class="toggle-switch">
-                        <input type="checkbox" id="independentToggle">
-                        <span class="toggle-slider"></span>
-                    </label>
+            <!-- 分辨率输入区 -->
+            <div class="control-group">
+                <div class="group-title">
+                    📐 调整分辨率
+                    <span class="hint">输入像素值</span>
                 </div>
-            </div>
-
-            <div class="control-group">
-                <label>
-                    宽度比例
-                    <span class="value-badge" id="widthPercentDisplay">100%</span>
-                </label>
-                <input type="range" id="widthSlider" min="1" max="200" value="100" step="1">
-            </div>
-
-            <div class="control-group">
-                <label>
-                    高度比例
-                    <span class="value-badge" id="heightPercentDisplay">100%</span>
-                </label>
-                <input type="range" id="heightSlider" min="1" max="200" value="100" step="1">
-            </div>
-
-            <div class="control-group">
-                <label>精确尺寸 (像素)</label>
-                <div class="dimension-inputs">
+                <div class="resolution-row">
                     <div class="input-wrapper">
                         <span>W</span>
-                        <input type="number" id="widthInput" min="1" max="10000" value="800" step="1">
+                        <input type="number" id="widthInput" min="1" max="10000" value="800" step="1" placeholder="宽度">
                     </div>
+                    <span class="x-mark">×</span>
                     <div class="input-wrapper">
                         <span>H</span>
-                        <input type="number" id="heightInput" min="1" max="10000" value="600" step="1">
+                        <input type="number" id="heightInput" min="1" max="10000" value="600" step="1" placeholder="高度">
                     </div>
                     <div class="lock-icon active" id="lockAspectBtn" title="锁定宽高比">🔒 锁定</div>
                 </div>
@@ -538,9 +424,9 @@
                 </div>
             </div>
 
-            <div class="info-bar" id="infoBar">
-                <span>当前尺寸</span>
-                <span class="badge" id="currentSizeBadge">— x —</span>
+            <div class="info-bar">
+                <span>当前分辨率</span>
+                <span class="badge" id="currentSizeBadge">— × —</span>
             </div>
 
             <div class="action-buttons">
@@ -574,10 +460,6 @@
         const uploadArea = document.getElementById('uploadArea');
         const previewCanvas = document.getElementById('previewCanvas');
         const emptyPreview = document.getElementById('emptyPreview');
-        const widthSlider = document.getElementById('widthSlider');
-        const heightSlider = document.getElementById('heightSlider');
-        const widthPercentDisplay = document.getElementById('widthPercentDisplay');
-        const heightPercentDisplay = document.getElementById('heightPercentDisplay');
         const widthInput = document.getElementById('widthInput');
         const heightInput = document.getElementById('heightInput');
         const lockAspectBtn = document.getElementById('lockAspectBtn');
@@ -586,22 +468,18 @@
         const saveBtn = document.getElementById('saveBtn');
         const currentSizeBadge = document.getElementById('currentSizeBadge');
         const previewContainer = document.getElementById('previewContainer');
-        const independentToggle = document.getElementById('independentToggle');
-        const modeHint = document.getElementById('modeHint');
 
         let originalImage = null;
         let originalWidth = 0;
         let originalHeight = 0;
         let aspectRatio = 1;
         let lockAspect = true;
-        let independentMode = false;
         let isUpdating = false;
 
         setControlsEnabled(false);
-        updateModeUI();
 
         function setControlsEnabled(enabled) {
-            const controls = [widthSlider, heightSlider, widthInput, heightInput, lockAspectBtn, resetBtn, downloadBtn, saveBtn, independentToggle];
+            const controls = [widthInput, heightInput, lockAspectBtn, resetBtn, downloadBtn, saveBtn];
             controls.forEach(el => {
                 if (enabled) {
                     el.removeAttribute('disabled');
@@ -615,33 +493,10 @@
             }
         }
 
-        function updateModeUI() {
-            if (independentMode) {
-                lockAspectBtn.classList.remove('active');
-                lockAspectBtn.textContent = '🔓 解锁';
-                lockAspect = false;
-                modeHint.textContent = '当前：独立调整';
-                modeHint.style.background = '#d9e6ff';
-                modeHint.style.color = '#1e4a7a';
-            } else {
-                if (lockAspect) {
-                    lockAspectBtn.classList.add('active');
-                    lockAspectBtn.textContent = '🔒 锁定';
-                } else {
-                    lockAspectBtn.classList.remove('active');
-                    lockAspectBtn.textContent = '🔓 解锁';
-                }
-                modeHint.textContent = '当前：等比缩放';
-                modeHint.style.background = '#eef3fc';
-                modeHint.style.color = '#2d5f9a';
-            }
-        }
-
-        function applyAspectLock(source, changedField = null) {
-            if (!originalImage || independentMode || !lockAspect) return;
-            if (isUpdating) return;
+        // 锁定宽高比时，根据变化的字段同步另一个
+        function applyAspectLock(changedField) {
+            if (!originalImage || !lockAspect || isUpdating) return;
             isUpdating = true;
-
             try {
                 let w = parseFloat(widthInput.value) || 1;
                 let h = parseFloat(heightInput.value) || 1;
@@ -654,23 +509,13 @@
                     w = Math.round(h * aspectRatio);
                     w = Math.min(10000, Math.max(1, w));
                     widthInput.value = w;
-                } else {
-                    h = Math.round(w / aspectRatio);
-                    h = Math.min(10000, Math.max(1, h));
-                    heightInput.value = h;
                 }
-
-                const wPercent = Math.round((parseFloat(widthInput.value) / originalWidth) * 100);
-                const hPercent = Math.round((parseFloat(heightInput.value) / originalHeight) * 100);
-                widthSlider.value = Math.min(200, Math.max(1, wPercent));
-                heightSlider.value = Math.min(200, Math.max(1, hPercent));
-                widthPercentDisplay.textContent = widthSlider.value + '%';
-                heightPercentDisplay.textContent = heightSlider.value + '%';
             } finally {
                 isUpdating = false;
             }
         }
 
+        // 渲染预览：实际像素 = 目标分辨率，显示尺寸固定（基于原始比例）
         function renderPreview() {
             if (!originalImage) return;
 
@@ -685,56 +530,37 @@
             if (parseInt(widthInput.value, 10) !== targetW) widthInput.value = targetW;
             if (parseInt(heightInput.value, 10) !== targetH) heightInput.value = targetH;
 
-            // 关键修改：Canvas 的实际像素尺寸 = 目标分辨率
+            // 实际画布尺寸 = 目标分辨率
             previewCanvas.width = targetW;
             previewCanvas.height = targetH;
             const ctx = previewCanvas.getContext('2d');
             ctx.clearRect(0, 0, targetW, targetH);
             ctx.drawImage(originalImage, 0, 0, targetW, targetH);
 
-            // 关键修改：强制 Canvas 的显示尺寸固定，不随分辨率变化
-            // 使用 CSS 固定显示大小，保持视觉尺寸不变
-            const containerWidth = previewContainer.clientWidth - 28; // 减去padding
+            // 显示尺寸固定：基于原始图片比例填充容器，不随分辨率变化
+            const containerWidth = previewContainer.clientWidth - 28;
             const containerHeight = previewContainer.clientHeight - 28;
-            
-            // 计算保持宽高比的显示尺寸（基于原始图片比例，而非目标分辨率）
             const displayAspect = originalWidth / originalHeight;
             let displayW, displayH;
-            
+
             if (containerWidth / containerHeight > displayAspect) {
-                // 容器更宽，以高度为准
                 displayH = containerHeight;
                 displayW = displayH * displayAspect;
             } else {
-                // 容器更高，以宽度为准
                 displayW = containerWidth;
                 displayH = displayW / displayAspect;
             }
-            
-            // 设置固定显示尺寸（不随分辨率变化）
+
             previewCanvas.style.width = displayW + 'px';
             previewCanvas.style.height = displayH + 'px';
 
-            currentSizeBadge.textContent = `${targetW} x ${targetH}`;
-
-            if (originalWidth && originalHeight) {
-                const wPercent = Math.round((targetW / originalWidth) * 100);
-                const hPercent = Math.round((targetH / originalHeight) * 100);
-                widthSlider.value = Math.min(200, Math.max(1, wPercent));
-                heightSlider.value = Math.min(200, Math.max(1, hPercent));
-                widthPercentDisplay.textContent = widthSlider.value + '%';
-                heightPercentDisplay.textContent = heightSlider.value + '%';
-            }
+            currentSizeBadge.textContent = `${targetW} × ${targetH}`;
         }
 
         function resetToOriginal() {
             if (!originalImage) return;
             widthInput.value = originalWidth;
             heightInput.value = originalHeight;
-            widthSlider.value = 100;
-            heightSlider.value = 100;
-            widthPercentDisplay.textContent = '100%';
-            heightPercentDisplay.textContent = '100%';
             renderPreview();
         }
 
@@ -760,15 +586,10 @@
 
                     widthInput.value = originalWidth;
                     heightInput.value = originalHeight;
-                    widthSlider.value = 100;
-                    heightSlider.value = 100;
-                    widthPercentDisplay.textContent = '100%';
-                    heightPercentDisplay.textContent = '100%';
 
-                    independentToggle.checked = false;
-                    independentMode = false;
                     lockAspect = true;
-                    updateModeUI();
+                    lockAspectBtn.classList.add('active');
+                    lockAspectBtn.textContent = '🔒 锁定';
 
                     renderPreview();
                 };
@@ -780,6 +601,7 @@
             reader.readAsDataURL(file);
         }
 
+        // 事件绑定
         imageInput.addEventListener('change', (e) => {
             const file = e.target.files[0];
             if (file) {
@@ -792,129 +614,71 @@
             imageInput.click();
         });
 
-        independentToggle.addEventListener('change', (e) => {
+        // 宽度输入
+        widthInput.addEventListener('input', () => {
+            if (!originalImage || isUpdating) return;
+            if (lockAspect) {
+                applyAspectLock('width');
+            }
+            renderPreview();
+        });
+
+        // 高度输入
+        heightInput.addEventListener('input', () => {
+            if (!originalImage || isUpdating) return;
+            if (lockAspect) {
+                applyAspectLock('height');
+            }
+            renderPreview();
+        });
+
+        // 失焦时修正数值范围
+        widthInput.addEventListener('blur', () => {
             if (!originalImage) return;
-            independentMode = e.target.checked;
-            if (independentMode) {
-                lockAspect = false;
-            } else {
-                lockAspect = true;
-                applyAspectLock('width', 'width');
-            }
-            updateModeUI();
-            renderPreview();
-        });
-
-        widthSlider.addEventListener('input', (e) => {
-            if (!originalImage || isUpdating) return;
-            const percent = parseFloat(e.target.value);
-            widthPercentDisplay.textContent = percent + '%';
-            const newWidth = Math.round(originalWidth * (percent / 100));
-            isUpdating = true;
-            widthInput.value = Math.min(10000, Math.max(1, newWidth));
-            isUpdating = false;
-
-            if (!independentMode && lockAspect) {
-                applyAspectLock('width', 'width');
-            } else {
-                const currentH = parseFloat(heightInput.value);
-                const hPercent = Math.round((currentH / originalHeight) * 100);
-                heightSlider.value = Math.min(200, Math.max(1, hPercent));
-                heightPercentDisplay.textContent = heightSlider.value + '%';
-            }
-            renderPreview();
-        });
-
-        heightSlider.addEventListener('input', (e) => {
-            if (!originalImage || isUpdating) return;
-            const percent = parseFloat(e.target.value);
-            heightPercentDisplay.textContent = percent + '%';
-            const newHeight = Math.round(originalHeight * (percent / 100));
-            isUpdating = true;
-            heightInput.value = Math.min(10000, Math.max(1, newHeight));
-            isUpdating = false;
-
-            if (!independentMode && lockAspect) {
-                applyAspectLock('height', 'height');
-            } else {
-                const currentW = parseFloat(widthInput.value);
-                const wPercent = Math.round((currentW / originalWidth) * 100);
-                widthSlider.value = Math.min(200, Math.max(1, wPercent));
-                widthPercentDisplay.textContent = widthSlider.value + '%';
-            }
-            renderPreview();
-        });
-
-        widthInput.addEventListener('input', (e) => {
-            if (!originalImage || isUpdating) return;
-            let w = parseInt(e.target.value, 10);
+            let w = parseInt(widthInput.value, 10);
             if (isNaN(w) || w < 1) w = 1;
             if (w > 10000) w = 10000;
-            if (!independentMode && lockAspect) {
-                applyAspectLock('width', 'width');
+            widthInput.value = w;
+            if (lockAspect) {
+                applyAspectLock('width');
             }
             renderPreview();
         });
 
-        heightInput.addEventListener('input', (e) => {
-            if (!originalImage || isUpdating) return;
-            let h = parseInt(e.target.value, 10);
+        heightInput.addEventListener('blur', () => {
+            if (!originalImage) return;
+            let h = parseInt(heightInput.value, 10);
             if (isNaN(h) || h < 1) h = 1;
             if (h > 10000) h = 10000;
-            if (!independentMode && lockAspect) {
-                applyAspectLock('height', 'height');
+            heightInput.value = h;
+            if (lockAspect) {
+                applyAspectLock('height');
             }
             renderPreview();
         });
 
-        widthInput.addEventListener('blur', (e) => {
-            if (!originalImage) return;
-            let w = parseInt(e.target.value, 10);
-            if (isNaN(w) || w < 1) w = 1;
-            if (w > 10000) w = 10000;
-            e.target.value = w;
-            if (!independentMode && lockAspect) {
-                applyAspectLock('width', 'width');
-            }
-            renderPreview();
-        });
-
-        heightInput.addEventListener('blur', (e) => {
-            if (!originalImage) return;
-            let h = parseInt(e.target.value, 10);
-            if (isNaN(h) || h < 1) h = 1;
-            if (h > 10000) h = 10000;
-            e.target.value = h;
-            if (!independentMode && lockAspect) {
-                applyAspectLock('height', 'height');
-            }
-            renderPreview();
-        });
-
+        // 锁定宽高比切换
         lockAspectBtn.addEventListener('click', () => {
             if (!originalImage) return;
-            if (independentMode) {
-                independentToggle.checked = false;
-                independentMode = false;
-                lockAspect = true;
-                updateModeUI();
-                applyAspectLock('width', 'width');
-                renderPreview();
-                return;
-            }
             lockAspect = !lockAspect;
-            updateModeUI();
             if (lockAspect) {
-                applyAspectLock('width', 'width');
+                lockAspectBtn.classList.add('active');
+                lockAspectBtn.textContent = '🔒 锁定';
+                applyAspectLock('width');
+            } else {
+                lockAspectBtn.classList.remove('active');
+                lockAspectBtn.textContent = '🔓 解锁';
             }
             renderPreview();
         });
 
+        // 重置
         resetBtn.addEventListener('click', () => {
             if (!originalImage) return;
             resetToOriginal();
         });
 
+        // 下载
         downloadBtn.addEventListener('click', () => {
             if (!originalImage || previewCanvas.classList.contains('hidden')) return;
             const link = document.createElement('a');
@@ -923,6 +687,7 @@
             link.click();
         });
 
+        // 保存
         saveBtn.addEventListener('click', () => {
             if (!originalImage || previewCanvas.classList.contains('hidden')) return;
             const link = document.createElement('a');
@@ -931,6 +696,7 @@
             link.click();
         });
 
+        // 拖拽支持
         previewContainer.addEventListener('dragover', (e) => e.preventDefault());
         previewContainer.addEventListener('drop', (e) => {
             e.preventDefault();
@@ -948,6 +714,7 @@
             }
         });
 
+        // 阻止触摸滚动
         document.body.addEventListener('touchmove', (e) => {
             if (e.target.closest('.card')) {
                 return;
